@@ -11,21 +11,21 @@ private:
     size_t size = 0;
 
 public:
-    // Constructor - allocates memory
+    // Allocates memory
     AutoArray(size_t array_size) : size(array_size)
     {
         ptr = new T[size];
         cout << "Allocated " << size << " elements\n";
     }
 
-    // Destructor - frees memory
+    // Frees memory
     ~AutoArray()
     {
         delete[] ptr;
         cout << "Freed memory\n";
     }
 
-    // Prevent copying
+    // Prevent Copying to avoid issues with double deletion of the same memory
     AutoArray(const AutoArray &) = delete;
     AutoArray &operator=(const AutoArray &) = delete;
 
@@ -58,8 +58,15 @@ int main()
     numbers[1] = 20;
     numbers[2] = 30;
 
+    
     numbers.traverse();
     numbers.getSize();
+    
+    // Testing the copying and assignmenting
+    // AutoArray<int> arr1(1);
+    // AutoArray<int> arr2(1);
+    // AutoArray<int> numbers = arr1;  // ERROR: Copying not allowed!
+    // arr2 = arr1;                 // ERROR: Assignment not allowed!
 
     return 0;
 }
