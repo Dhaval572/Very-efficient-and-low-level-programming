@@ -35,6 +35,18 @@ public:
         return ptr[index];
     }
 
+    void traverse() const
+    {
+        cout << "Elements of the array: [";
+        for (size_t i = 0; i < size; ++i)
+        {
+            cout << ptr[i];
+            if (i < size - 1)
+                cout << ", ";
+        }
+        cout << "]" << endl;
+    }
+
     size_t getSize() const { return size; }
 };
 
@@ -45,6 +57,9 @@ int main()
     numbers[0] = 10;
     numbers[1] = 20;
     numbers[2] = 30;
-    
+
+    numbers.traverse();
+    numbers.getSize();
+
     return 0;
 }
