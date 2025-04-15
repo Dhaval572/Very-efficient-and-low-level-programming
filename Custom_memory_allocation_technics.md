@@ -130,8 +130,3 @@ void* Bullet::operator new(size_t size) {
 
 ---
 
-## Next Steps
-- Implement a custom memory pool.
-- Practice with alignas/alignof in structures.
-- Add memory diagnostics to your engine.
-
