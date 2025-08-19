@@ -65,8 +65,8 @@ int main()
     // Testing the copying and assignmenting
     // AutoArray<int> arr1(1);
     // AutoArray<int> arr2(1);
-    // AutoArray<int> numbers = arr1;  // ERROR: Copying not allowed!
-    // arr2 = arr1;                 // ERROR: Assignment not allowed!
+    // AutoArray<int> numbers = arr1;	// ERROR: Copying not allowed!
+    // arr2 = arr1;                   	// ERROR: Assignment not allowed!
 
     return 0;
 }
