@@ -6,17 +6,17 @@
 template<typename T>
 class MemoryPool
 {
-    struct FreeBlock
+    struct t_FreeBlock
     {
-        FreeBlock* next;
+        t_FreeBlock* next;
     };
 
     char* m_Pool;
-    FreeBlock* m_FreeList;
+    t_FreeBlock* m_FreeList;
     size_t m_BlockCount;
 
 public:
-    MemoryPool(size_t block_count)
+    MemoryPool(const size_t block_count)
         : m_Pool(new char[sizeof(T) * block_count]),
           m_FreeList(nullptr),
           m_BlockCount(block_count)
@@ -29,11 +29,11 @@ public:
            	and find the next free block when we want to allocate memory
 		*/
 
-        m_FreeList = reinterpret_cast<FreeBlock*>(m_Pool);
-        FreeBlock* block = m_FreeList;
+        m_FreeList = reinterpret_cast<t_FreeBlock*>(m_Pool);
+        t_FreeBlock* block = m_FreeList;
         for (size_t i = 1; i < m_BlockCount; ++i)
         {
-            block->next = reinterpret_cast<FreeBlock*>(m_Pool + i * sizeof(T));
+            block->next = reinterpret_cast<t_FreeBlock*>(m_Pool + i * sizeof(T));
             block = block->next;
         }
         block->next = nullptr;
@@ -52,7 +52,7 @@ public:
 			throw std::bad_alloc();	
 		}
 
-        FreeBlock* block = m_FreeList;
+        t_FreeBlock* block = m_FreeList;
         m_FreeList = m_FreeList->next;
         return reinterpret_cast<T*>(block);
     }
@@ -60,7 +60,7 @@ public:
     // Deallocate a block of type T
     void Deallocate(T* p)
     {
-        FreeBlock* block = reinterpret_cast<FreeBlock*>(p);
+        t_FreeBlock* block = reinterpret_cast<t_FreeBlock*>(p);
         block->next = m_FreeList;
         m_FreeList = block;
     }
@@ -89,11 +89,11 @@ class AllocatorTester
     size_t m_BlockCount;
 
 public:
-    AllocatorTester(size_t block_count) : m_BlockCount(block_count) {}
+    AllocatorTester(const size_t block_count) : m_BlockCount(block_count) {}
 
 	// Note: I used lambda function for simplicity
 	template<typename T>	
-    long long TestStdNewDelete(size_t block_size)
+    long long TestStdNewDelete(const size_t block_size)
     {
         return Benchmark::measure([&]()
         {
@@ -135,13 +135,13 @@ public:
 
 int main()
 {
-    constexpr size_t block_count = 1'000'000;
-    constexpr size_t block_size = 64;
-	using Block = std::array<char, block_size>;
-    MemoryPool<Block> pool(block_count);
+    constexpr size_t BLOCK_COUNT = 1'000'000;
+    constexpr size_t BLOCK_SIZE = 64;
+	using Block = std::array<char, BLOCK_SIZE>;
+    MemoryPool<Block> pool(BLOCK_COUNT);
 	
-    AllocatorTester tester(block_count);
-    auto std_time = tester.TestStdNewDelete<Block>(block_size);
+    AllocatorTester tester(BLOCK_COUNT);
+    auto std_time = tester.TestStdNewDelete<Block>(BLOCK_SIZE);
     auto pool_time = tester.TestMemoryPool(pool);
 
     std::cout << "Time (custom allocator): " << pool_time << " ms\n";
