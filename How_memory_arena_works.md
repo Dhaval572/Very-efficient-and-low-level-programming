@@ -66,31 +66,35 @@ This model is like a whiteboard: you write (allocate) many times, but when it’
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
-
 // User's words: a big block is allocated, objects use memory, and all must be cleaned at once.
 
-typedef struct MemoryArena {
+typedef struct MemoryArena
+{
     uint8_t *base;
     size_t size;
     size_t offset;
 } MemoryArena;
 
 // Initialize the arena: allocate 'size' bytes
-void arena_init(MemoryArena *arena, size_t size) {
+void arena_init(MemoryArena *arena, size_t size)
+{
     arena->base = (uint8_t*)malloc(size);
     arena->size = size;
     arena->offset = 0;
 }
 
 // Align 'offset' to 'alignment' boundary
-target_size_t align_up(target_size_t offset, size_t alignment) {
+target_size_t align_up(target_size_t offset, size_t alignment)
+{
     size_t mask = alignment - 1;
     return (offset + mask) & ~mask;
 }
 
-// Allocate 'n' bytes from the arena with alignmentoid* arena_allocate(MemoryArena *arena, size_t n, size_t alignment) {
+// Allocate 'n' bytes from the arena with alignmentoid* arena_allocate(MemoryArena *arena, size_t n, size_t alignment)
+{
     size_t aligned_offset = align_up(arena->offset, alignment);
-    if (aligned_offset + n > arena->size) {
+    if (aligned_offset + n > arena->size)
+    {
         return NULL; // Out of memory
     }
     void *ptr = arena->base + aligned_offset;
@@ -99,30 +103,35 @@ target_size_t align_up(target_size_t offset, size_t alignment) {
 }
 
 // Reset the arena: free all objects at once
-void arena_reset(MemoryArena *arena) {
+void arena_reset(MemoryArena *arena)
+{
     arena->offset = 0;
 }
 
 // Destroy the arena: release the big block
-void arena_destroy(MemoryArena *arena) {
+void arena_destroy(MemoryArena *arena)
+{
     free(arena->base);
     arena->base = NULL;
     arena->size = 0;
     arena->offset = 0;
 }
 
-int main() {
+int main()
+{
     MemoryArena arena;
     arena_init(&arena, 1024 * 1024); // Allocate 1 MB
 
     // Allocate aligned objects
     int *numbers = (int*)arena_allocate(&arena, 100 * sizeof(int), alignof(int));
-    if (!numbers) {
+    if (!numbers)
+    {
         fprintf(stderr, "Arena out of memory!\n");
         return 1;
     }
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++)
+    {
         numbers[i] = i * i;
     }
 
