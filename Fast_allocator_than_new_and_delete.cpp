@@ -1,6 +1,7 @@
 // Custom allocator which is faster then new and delete
 #include <iostream>
 #include <chrono>
+#include <array>
 #include <vector>
 
 template<typename T>
